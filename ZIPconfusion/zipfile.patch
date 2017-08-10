@@ -1,0 +1,28 @@
+--- /usr/lib/python2.7/zipfile.py	2017-01-19 16:48:08.000000000 +0200
++++ zipfile.py	2017-08-10 08:50:28.506133012 +0300
+@@ -723,7 +723,7 @@
+ 
+     fp = None                   # Set here since __del__ checks it
+ 
+-    def __init__(self, file, mode="r", compression=ZIP_STORED, allowZip64=False):
++    def __init__(self, file, mode="r", compression=ZIP_STORED, allowZip64=False, ignoreFilenameMismatch=False):
+         """Open the ZIP file with mode read "r", write "w" or append "a"."""
+         if mode not in ("r", "w", "a"):
+             raise RuntimeError('ZipFile() requires mode "r", "w", or "a"')
+@@ -739,6 +739,7 @@
+ 
+         self._allowZip64 = allowZip64
+         self._didModify = False
++        self._ignoreFilenameMismatch = ignoreFilenameMismatch
+         self.debug = 0  # Level of printing: 0 through 3
+         self.NameToInfo = {}    # Find file info given name
+         self.filelist = []      # List of ZipInfo instances for archive
+@@ -977,7 +978,7 @@
+             if fheader[_FH_EXTRA_FIELD_LENGTH]:
+                 zef_file.read(fheader[_FH_EXTRA_FIELD_LENGTH])
+ 
+-            if fname != zinfo.orig_filename:
++            if fname != zinfo.orig_filename and not self._ignoreFilenameMismatch:
+                 raise BadZipfile, \
+                         'File name in directory "%s" and header "%s" differ.' % (
+                             zinfo.orig_filename, fname)
