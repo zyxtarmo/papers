@@ -1,0 +1,9 @@
+[Unit]
+Description = OpenDXL firewall daemon
+
+[Service]
+# reload dameon before use: sudo systemctl daemon reload
+ExecStart = python2 /opt/OpenDXL-firewall/service.py
+
+[Install]
+WantedBy = network.target
